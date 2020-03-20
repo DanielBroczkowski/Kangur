@@ -3,4 +3,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_login_register">LoginRegisterActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="shr_app_name">Kangur</string>
+    <string name="shr_hint_username">Username</string>
+    <string name="shr_hint_email">Email</string>
+    <string name="shr_hint_password">Password</string>
+    <string name="shr_hint_password_repeat">Repeat Password</string>
+    <string name="shr_button_Register">Register</string>
+    <string name="shr_dont_have_account">Don\'t have account? Register!</string>
+    <string name="shr_button_Login">Login</string>
+    <string name="shr_already_registered">Already Registered? Login!</string>
 </resources>
