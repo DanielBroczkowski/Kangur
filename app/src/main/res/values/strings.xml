@@ -16,4 +16,5 @@
     <string name="shr_dont_have_account">Don\'t have account? Register!</string>
     <string name="shr_button_Login">Login</string>
     <string name="shr_already_registered">Already Registered? Login!</string>
+    <string name="shr_login_with_mail">Zaloguj się Przez Email</string>
 </resources>

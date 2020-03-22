@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_register_activity_navigation"
+    app:startDestination="@id/mainLoginFragment">
+
+    <fragment
+        android:id="@+id/mainLoginFragment"
+        android:name="com.example.kangur.login_register_activity.main_login.MainLoginFragment"
+        android:label="fragment_main_login"
+        tools:layout="@layout/fragment_main_login" />
+</navigation>

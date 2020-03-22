@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "755795803997",
-    "firebase_url": "https://messengerapp-d3d1e.firebaseio.com",
-    "project_id": "messengerapp-d3d1e",
-    "storage_bucket": "messengerapp-d3d1e.appspot.com"
+    "project_number": "874837375578",
+    "firebase_url": "https://kangur-55197.firebaseio.com",
+    "project_id": "kangur-55197",
+    "storage_bucket": "kangur-55197.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:755795803997:android:b4123016d96dc4eec932b4",
+        "mobilesdk_app_id": "1:874837375578:android:624a3d6283992c6f507663",
         "android_client_info": {
           "package_name": "com.example.kangur"
         }
       },
       "oauth_client": [
         {
-          "client_id": "755795803997-j2lt0vns5sgjt8bhiuahhkiiqjlaptjj.apps.googleusercontent.com",
+          "client_id": "874837375578-4mtubi6i3rdldb99ctka46e5l3fsujo0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyClQXyTocVX9J-KqGixwJTqIF_5c-GkOd4"
+          "current_key": "AIzaSyBTAkAJAyTTIF5W-tE6xmXwPV4LewQd7iM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "755795803997-j2lt0vns5sgjt8bhiuahhkiiqjlaptjj.apps.googleusercontent.com",
+              "client_id": "874837375578-4mtubi6i3rdldb99ctka46e5l3fsujo0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

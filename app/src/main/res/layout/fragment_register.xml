@@ -78,6 +78,7 @@
             android:text="@string/shr_button_Register" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/switch_to_login_button"
             style="@style/Theme.MaterialComponents.Light.NoActionBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
