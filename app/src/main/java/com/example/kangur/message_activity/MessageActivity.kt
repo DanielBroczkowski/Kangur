@@ -1,17 +1,13 @@
-package com.example.kangur.MainActivity
+package com.example.kangur.message_activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.kangur.R
 
-class MainActivity : AppCompatActivity() {
+class MessageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        setContentView(R.layout.activity_message)
     }
-
-
 }
-
