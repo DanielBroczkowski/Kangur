@@ -15,6 +15,7 @@
         android:hint="@string/shr_hint_username">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_tv_login_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLength="30"
@@ -29,7 +30,7 @@
         android:hint="@string/shr_hint_password">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/password_edit_text"
+            android:id="@+id/register_tv_login_fragment1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLength="30"

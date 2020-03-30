@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 
 import com.example.kangur.R
+import com.example.kangur.firebase.FirebaseConnection
 import com.example.kangur.login_register_activity.register.RegisterFragment
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -28,6 +29,13 @@ class LoginFragment : Fragment() {
         super.onStart()
         switch_to_register_button.setOnClickListener{
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
+        login_button.setOnClickListener {
+            val login = login_tv_login_fragment.text.toString()
+            val password =register_tv_login_fragment1.text.toString()
+            if(login.isEmpty() || password.isEmpty())return@setOnClickListener
+
+            FirebaseConnection().login(login,password)
         }
     }
 }
