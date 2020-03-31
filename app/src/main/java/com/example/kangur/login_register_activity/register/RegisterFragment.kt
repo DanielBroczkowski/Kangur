@@ -32,9 +32,14 @@ import com.example.kangur.login_register_activity.login.LoginFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.w3c.dom.Text
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -124,7 +129,9 @@ class RegisterFragment : Fragment() {
                 Toast.makeText(requireActivity(),"Niepoprawne Dane", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-                FirebaseConnection().register(new_email_edit_text.text.toString(),new_password_edit_text.text.toString())
+            uploadImageToFireBaseStorage()
+                FirebaseConnection().register(new_email_edit_text.text.toString(),new_password_edit_text.text.toString()) //MVVM!!!!!
+            TODO() //MVVM
         }
         select_photo_button_register.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
@@ -166,11 +173,27 @@ class RegisterFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode==0 && resultCode== Activity.RESULT_OK &&data!=null){
-            val selectedPhoto = data.data
+            selectedPhoto = data.data
             val bitmap = ImageDecoder.createSource(activity!!.contentResolver, selectedPhoto!!)
             val bitmapDrawable= ImageDecoder.decodeDrawable(bitmap)
             select_photo_button_register.setImageDrawable(bitmapDrawable)
         }
+    }
+
+    private fun uploadImageToFireBaseStorage(){ //uploads selected image to firebase storage. doesn't upload default image || atm here, need to put it into MVVM
+        if(selectedPhoto==null) return
+
+        val fileName=UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/images/$fileName")
+        ref.putFile(selectedPhoto!!).addOnSuccessListener {
+            Toast.makeText(activity!!,"dodane", Toast.LENGTH_SHORT).show()
+        }
+
+        safeUserToFireBaseDataBase()
+    }
+    private fun safeUserToFireBaseDataBase(){
+        val uid= FirebaseAuth.getInstance().uid
+        FirebaseDatabase.getInstance().getReference("/users/$uid")
     }
 
 }
