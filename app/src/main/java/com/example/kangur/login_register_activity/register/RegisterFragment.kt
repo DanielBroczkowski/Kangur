@@ -23,11 +23,15 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.contentValuesOf
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 
 import com.example.kangur.R
 import com.example.kangur.firebase.FirebaseConnection
+import com.example.kangur.firebase.User
+import com.example.kangur.latest_message_activity.LatestMessagesActivity
 import com.example.kangur.login_register_activity.login.LoginFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -48,6 +52,7 @@ class RegisterFragment : Fragment() {
 
 
     var selectedPhoto: Uri?=null
+    var registerViewModel= RegisterViewModel()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,6 +62,8 @@ class RegisterFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
+
         switch_to_login_button.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
@@ -65,6 +72,11 @@ class RegisterFragment : Fragment() {
 //        passwordET.addTextChangedListener(generalTextWatcher)
 //        newloginET.addTextChangedListener(generalTextWatcher)
 
+        select_photo_button_register.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type="image/*"
+            startActivityForResult(intent, 0)
+        }
         new_login_edit_text.setOnFocusChangeListener { v, hasFocus ->
             val login = new_login_edit_text.text.toString()
             if(hasFocus){
@@ -129,14 +141,10 @@ class RegisterFragment : Fragment() {
                 Toast.makeText(requireActivity(),"Niepoprawne Dane", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            uploadImageToFireBaseStorage()
-                FirebaseConnection().register(new_email_edit_text.text.toString(),new_password_edit_text.text.toString()) //MVVM!!!!!
-            TODO() //MVVM
-        }
-        select_photo_button_register.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type="image/*"
-            startActivityForResult(intent, 0)
+//            FirebaseConnection().uploadImageToFireBaseStorage(selectedPhoto!!)
+//                FirebaseConnection().register(new_email_edit_text.text.toString(),new_password_edit_text.text.toString()) //MVVM!!!!!
+
+            registerViewModel.createUserByEmail(selectedPhoto,email,password)
         }
     }
 
@@ -187,13 +195,25 @@ class RegisterFragment : Fragment() {
         val ref = FirebaseStorage.getInstance().getReference("/images/$fileName")
         ref.putFile(selectedPhoto!!).addOnSuccessListener {
             Toast.makeText(activity!!,"dodane", Toast.LENGTH_SHORT).show()
+            ref.downloadUrl.addOnSuccessListener {
+                safeUserToFireBaseDataBase(it.toString())
+            }
         }
 
-        safeUserToFireBaseDataBase()
     }
-    private fun safeUserToFireBaseDataBase(){
-        val uid= FirebaseAuth.getInstance().uid
-        FirebaseDatabase.getInstance().getReference("/users/$uid")
+    private fun safeUserToFireBaseDataBase(profileImgUrl:String){
+        val uid= FirebaseAuth.getInstance().uid ?:""
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+
+        val user = User(uid, new_login_edit_text.text.toString(), profileImgUrl)
+
+        ref.setValue(user)
+            .addOnSuccessListener {
+                Log.d("register", "saved user to firebase")
+                val intent = Intent(activity!!, LatestMessagesActivity::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
     }
 
 }
