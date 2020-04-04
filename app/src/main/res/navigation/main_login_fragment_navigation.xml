@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginOptionsFragment"
-        android:name="com.example.kangur.login_register_activity.options.LoginOptionsFragment"
+        android:name="com.example.kangur.view.login_register_activity.options.LoginOptionsFragment"
         android:label="fragment_login_options"
         tools:layout="@layout/fragment_login_options" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.kangur.login_register_activity.login.LoginFragment"
+        android:name="com.example.kangur.view.login_register_activity.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.kangur.login_register_activity.register.RegisterFragment"
+        android:name="com.example.kangur.view.login_register_activity.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action

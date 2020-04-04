@@ -11,35 +11,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".latest_message_activity.LatestMessagesActivity">
+        <activity android:name=".view.splash_screen_activity.SplashScreenActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".message_activity.MessageActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".latest_message_activity.LatestMessagesActivity" />
+        <activity android:name=".view.latest_message_activity.LatestMessagesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".new_message_activity.NewMessageActivity">
+        <activity android:name=".view.message_activity.MessageActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".latest_message_activity.LatestMessagesActivity" />
+                android:value="com.example.kangur.view.latest_message_activity.LatestMessagesActivity" />
+        </activity>
+        <activity android:name=".view.new_message_activity.NewMessageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kangur.view.latest_message_activity.LatestMessagesActivity" />
         </activity>
         <activity
-            android:name=".login_register_activity.LoginRegisterActivity"
+            android:name=".view.login_register_activity.LoginRegisterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_login_register"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" >
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

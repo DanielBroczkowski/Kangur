@@ -1,11 +1,11 @@
-package com.example.kangur.latest_message_activity.adapter
+package com.example.kangur.view.latest_message_activity
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kangur.R
-import com.example.kangur.latest_message_activity.adapter.AdapterLatestMessagesActivity.*
+import com.example.kangur.view.latest_message_activity.AdapterLatestMessagesActivity.*
 
 class AdapterLatestMessagesActivity:RecyclerView.Adapter<ViewHolder>() {
 

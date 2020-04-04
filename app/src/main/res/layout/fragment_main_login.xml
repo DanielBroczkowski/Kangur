@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/loginPageBackgroundColor"
-    tools:context=".login_register_activity.main_login.MainLoginFragment">
+    tools:context=".view.login_register_activity.main_login.MainLoginFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -5,7 +5,7 @@
     android:id="@+id/fragment_login_options"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login_register_activity.options.LoginOptionsFragment">
+    tools:context=".view.login_register_activity.options.LoginOptionsFragment">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_with_email_option_button"

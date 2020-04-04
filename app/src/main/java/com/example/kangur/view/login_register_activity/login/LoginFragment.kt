@@ -1,4 +1,4 @@
-package com.example.kangur.login_register_activity.login
+package com.example.kangur.view.login_register_activity.login
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 
 import com.example.kangur.R
-import com.example.kangur.firebase.FirebaseConnection
-import com.example.kangur.login_register_activity.register.RegisterFragment
 import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
@@ -35,7 +33,7 @@ class LoginFragment : Fragment() {
             val password =register_tv_login_fragment1.text.toString()
             if(login.isEmpty() || password.isEmpty())return@setOnClickListener
 
-            FirebaseConnection().login(login,password)
+            //FirebaseConnection().login(login,password)
         }
     }
 }

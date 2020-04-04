@@ -1,4 +1,4 @@
-package com.example.kangur.message_activity
+package com.example.kangur.view.message_activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

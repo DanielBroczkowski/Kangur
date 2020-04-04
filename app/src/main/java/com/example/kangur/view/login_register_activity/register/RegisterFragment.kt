@@ -1,49 +1,27 @@
-package com.example.kangur.login_register_activity.register
+package com.example.kangur.view.login_register_activity.register
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.ImageDecoder
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.contentValuesOf
-import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-
+import androidx.lifecycle.Observer
 import com.example.kangur.R
-import com.example.kangur.firebase.FirebaseConnection
-import com.example.kangur.firebase.User
-import com.example.kangur.latest_message_activity.LatestMessagesActivity
-import com.example.kangur.login_register_activity.login.LoginFragment
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.fragment_login.*
+import com.example.kangur.view.latest_message_activity.LatestMessagesActivity
+import com.example.kangur.viewmodel.RegistrationViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
-import org.w3c.dom.Text
-import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -52,7 +30,8 @@ class RegisterFragment : Fragment() {
 
 
     var selectedPhoto: Uri?=null
-    var registerViewModel= RegisterViewModel()
+    var registerViewModel= RegistrationViewModel()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,7 +41,7 @@ class RegisterFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
+        registerViewModel = ViewModelProviders.of(this).get(RegistrationViewModel::class.java)
 
         switch_to_login_button.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
@@ -134,18 +113,29 @@ class RegisterFragment : Fragment() {
             val email = new_email_edit_text.text.toString()
             val password = new_password_edit_text.text.toString()
             val passwordRep= new_password_repeat_edit_text.text.toString()
+
             if (!isEmailValid(email) ||
                 login.length<6 ||
                 password.length<8 ||
                 password!= passwordRep){
-                Toast.makeText(requireActivity(),"Niepoprawne Dane", Toast.LENGTH_SHORT).show()
+                toastMessage("Niepoprawne Dane")
                 return@setOnClickListener
             }
-//            FirebaseConnection().uploadImageToFireBaseStorage(selectedPhoto!!)
-//                FirebaseConnection().register(new_email_edit_text.text.toString(),new_password_edit_text.text.toString()) //MVVM!!!!!
-
-            registerViewModel.createUserByEmail(selectedPhoto,email,password)
+            registerViewModel.createUserByEmail(selectedPhoto,email,password, login)
         }
+
+        registerViewModel.isRegistered.observe(viewLifecycleOwner, Observer {
+            if(it==true) {
+                toastMessage("Udało się zarejestrować")
+                val intent = Intent(activity, LatestMessagesActivity::class.java)
+                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            else{
+                toastMessage("Wystąpił błąd przy rejestracji...")
+            }
+
+        })
     }
 
     fun isEmailValid(email: String): Boolean {
@@ -188,32 +178,7 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun uploadImageToFireBaseStorage(){ //uploads selected image to firebase storage. doesn't upload default image || atm here, need to put it into MVVM
-        if(selectedPhoto==null) return
-
-        val fileName=UUID.randomUUID().toString()
-        val ref = FirebaseStorage.getInstance().getReference("/images/$fileName")
-        ref.putFile(selectedPhoto!!).addOnSuccessListener {
-            Toast.makeText(activity!!,"dodane", Toast.LENGTH_SHORT).show()
-            ref.downloadUrl.addOnSuccessListener {
-                safeUserToFireBaseDataBase(it.toString())
-            }
-        }
-
+    private fun toastMessage(text:String){
+        Toast.makeText(requireActivity(),text, Toast.LENGTH_SHORT).show()
     }
-    private fun safeUserToFireBaseDataBase(profileImgUrl:String){
-        val uid= FirebaseAuth.getInstance().uid ?:""
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-
-        val user = User(uid, new_login_edit_text.text.toString(), profileImgUrl)
-
-        ref.setValue(user)
-            .addOnSuccessListener {
-                Log.d("register", "saved user to firebase")
-                val intent = Intent(activity!!, LatestMessagesActivity::class.java)
-                intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-    }
-
 }

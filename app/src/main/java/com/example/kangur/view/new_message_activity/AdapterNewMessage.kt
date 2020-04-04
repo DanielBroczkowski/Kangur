@@ -1,11 +1,11 @@
-package com.example.kangur.new_message_activity.adapters
+package com.example.kangur.view.new_message_activity
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kangur.R
-import com.example.kangur.new_message_activity.adapters.AdapterNewMessage.*
+import com.example.kangur.view.new_message_activity.AdapterNewMessage.*
 
 class AdapterNewMessage(): RecyclerView.Adapter<ViewHolder>() {
 
