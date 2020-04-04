@@ -38,4 +38,7 @@ class FirebaseAuthManager {
     fun signOut(){
         firebaseAuth.signOut()
     }
+    fun getUID() :String{
+        return firebaseAuth.currentUser?.uid.toString()
+    }
 }

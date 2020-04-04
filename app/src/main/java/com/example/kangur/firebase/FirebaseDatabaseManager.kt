@@ -2,11 +2,15 @@ package com.example.kangur.firebase
 
 import android.util.Log
 import com.example.kangur.model.User
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class FirebaseDatabaseManager {
 
     private val firebaseDatabase = FirebaseDatabase.getInstance()
+    private var list:ArrayList<User> = ArrayList()
 
     fun safeUserToFireBaseDataBase(profileImgUrl: String?, uid:String, login:String) {
         val pictureurl:String
@@ -27,5 +31,21 @@ class FirebaseDatabaseManager {
                 Log.d("RegisterFragment", "Failed to save user to firebase database")
                 return@addOnFailureListener
             }
+    }
+    fun fetchUsers(listofUsers:(c: ArrayList<User>) -> Unit?){
+        val ref = firebaseDatabase.getReference("/users")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(p0: DataSnapshot) {
+                p0.children.forEach{
+                    val user = it.getValue(User::class.java)
+                    list.add(user!!)
+                }
+                listofUsers(list)
+                Log.d("NewMessageActivity", "Successfully fetched users from firebase database")
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                Log.d("NewMessageActivity", "Failed to fetch users from firebase database")
+            }
+        })
     }
 }
