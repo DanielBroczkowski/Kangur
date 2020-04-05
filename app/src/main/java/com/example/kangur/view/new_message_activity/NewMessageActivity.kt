@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kangur.R
 import com.example.kangur.model.User
+import com.example.kangur.serializable.UserSerializableClass
 import com.example.kangur.view.message_activity.MessageActivity
 import com.example.kangur.viewmodel.AllUsersViewModel
 
@@ -34,6 +35,7 @@ class NewMessageActivity : AppCompatActivity() {
     }
     private fun loadMessageActivity(toUser: User){
         val intent = Intent(this, MessageActivity::class.java)
+        intent.putExtra("user", toUser)
         startActivity(intent)
         finish()
     }

@@ -26,12 +26,15 @@ class FirebaseAuthManager {
 
     }
 
-    fun login(email:String, password: String){ //na razie nie ruszane
+    fun login(email:String, password: String, onCompleted:(b: Boolean) -> Unit){ //na razie nie ruszane
         firebaseAuth.signInWithEmailAndPassword(email,password)
             .addOnCompleteListener {
                 if(!it.isSuccessful)return@addOnCompleteListener
-
+                onCompleted(true)
                 "SUKCES NA ${it.result?.user?.uid}"
+            }
+            .addOnFailureListener{
+                onCompleted(false)
             }
     }
 

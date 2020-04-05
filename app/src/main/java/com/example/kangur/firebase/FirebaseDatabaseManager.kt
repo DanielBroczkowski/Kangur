@@ -1,11 +1,9 @@
 package com.example.kangur.firebase
 
 import android.util.Log
+import com.example.kangur.model.ChatMessage
 import com.example.kangur.model.User
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 
 class FirebaseDatabaseManager {
 
@@ -46,6 +44,47 @@ class FirebaseDatabaseManager {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("NewMessageActivity", "Failed to fetch users from firebase database")
             }
+        })
+    }
+
+    fun sendMessage(chatMessage:ChatMessage){
+        val ref = firebaseDatabase.getReference("/messages").push()
+        chatMessage.id= ref.key
+        ref.setValue(chatMessage)
+            .addOnSuccessListener {
+                Log.d("MessageActivity", "Saved message in FireBaseDataBase")
+            }
+            .addOnFailureListener{
+                Log.d("MessageActivity", "Failed to save message in FireBaseDataBase")
+            }
+    }
+
+    fun listenforMessages(myUid:String, setMessages:(chatmessage:ChatMessage)-> Unit){
+        val ref = firebaseDatabase.getReference("/messages")
+
+        ref.addChildEventListener(object : ChildEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val chatMessage = p0.getValue(ChatMessage::class.java)
+                if(chatMessage!=null) {
+                    Log.d("MessageActivity", "New message arrived")
+                    if (chatMessage.fromId == myUid) {
+                        setMessages(chatMessage)
+                    }
+                }
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
+
         })
     }
 }
