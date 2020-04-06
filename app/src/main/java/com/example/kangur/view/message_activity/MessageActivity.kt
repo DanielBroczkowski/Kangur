@@ -8,12 +8,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kangur.R
+import com.example.kangur.firebase.FirebaseAuthManager
 import com.example.kangur.model.User
-import com.example.kangur.serializable.UserSerializable
-import com.example.kangur.serializable.UserSerializableClass
+import com.example.kangur.view.latest_message_activity.LatestMessagesActivity
 import com.example.kangur.viewmodel.UsersCommunicationViewModel
 import kotlinx.android.synthetic.main.activity_message.*
-import java.io.Serializable
 
 class MessageActivity : AppCompatActivity() {
 
@@ -25,13 +24,14 @@ class MessageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_message)
         usersCommunicationViewModel = ViewModelProviders.of(this).get(UsersCommunicationViewModel::class.java)
 
-        val adapter = MessageAdapter(this, interlocutor.uid)
+        usersCommunicationViewModel.listenForMessages(interlocutor.uid)
+
+        val adapter = MessageAdapter(this, interlocutor, LatestMessagesActivity.currentUser!!)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_message)
         recyclerView.adapter=adapter
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.stackFromEnd=true
         recyclerView.layoutManager = linearLayoutManager
-        usersCommunicationViewModel.listenForMessages()
         usersCommunicationViewModel.messageList.observe(this, Observer { adapter.onNewMessageCame(it)  })
 
         enterMessageImageButton.setOnClickListener{

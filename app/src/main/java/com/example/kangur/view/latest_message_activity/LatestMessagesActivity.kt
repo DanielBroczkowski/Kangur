@@ -3,12 +3,14 @@ package com.example.kangur.view.latest_message_activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kangur.R
+import com.example.kangur.model.User
 import com.example.kangur.view.login_register_activity.LoginRegisterActivity
 import com.example.kangur.view.new_message_activity.NewMessageActivity
 import com.example.kangur.viewmodel.SignOutSignInViewModel
@@ -18,15 +20,22 @@ class LatestMessagesActivity : AppCompatActivity() {
 
     var signoutViewModel=SignOutSignInViewModel()
 
+    companion object{
+        var currentUser:User?= null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        signoutViewModel.getCurrentUser(::setCurrentUser)
+
         signoutViewModel = ViewModelProviders.of(this).get(SignOutSignInViewModel()::class.java)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_latestmessages)
         val adapter =
             AdapterLatestMessagesActivity()
         recyclerView.adapter=adapter
         recyclerView.layoutManager=LinearLayoutManager(this)
+        Log.d("xd", currentUser?.username.toString())
 
     }
 
@@ -51,5 +60,8 @@ class LatestMessagesActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    fun setCurrentUser(user:User){
+        currentUser=user
+    }
 }
 

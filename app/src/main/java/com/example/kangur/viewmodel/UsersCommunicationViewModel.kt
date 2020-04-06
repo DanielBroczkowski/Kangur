@@ -19,8 +19,8 @@ class UsersCommunicationViewModel:ViewModel() {
         val chatMessage = ChatMessage(firebaseAuthManager.getUID(), null,text, System.currentTimeMillis() / 1000, toId)
         firebaseDatabaseManager.sendMessage(chatMessage)
     }
-    fun listenForMessages() = CoroutineScope(Dispatchers.IO).launch {
-        firebaseDatabaseManager.listenforMessages(firebaseAuthManager.getUID(), ::setMessages)
+    fun listenForMessages(interlocutorUID:String) = CoroutineScope(Dispatchers.IO).launch {
+        firebaseDatabaseManager.listenforMessages(firebaseAuthManager.getUID(), interlocutorUID, ::setMessages)
     }
 
     private fun setMessages(chatMessage: ChatMessage){

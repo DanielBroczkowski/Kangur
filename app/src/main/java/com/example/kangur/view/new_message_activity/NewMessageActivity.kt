@@ -3,14 +3,12 @@ package com.example.kangur.view.new_message_activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Message
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kangur.R
 import com.example.kangur.model.User
-import com.example.kangur.serializable.UserSerializableClass
 import com.example.kangur.view.message_activity.MessageActivity
 import com.example.kangur.viewmodel.AllUsersViewModel
 

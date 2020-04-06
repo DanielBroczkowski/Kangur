@@ -25,9 +25,7 @@ class AllUsersViewModel: ViewModel() {
         var removePositin : Int? = null
         val useruid= firebaseAuthManager.getUID()
         list.forEachIndexed { index, user ->
-            Log.d("tester", user.uid + " " + useruid)
             if(user.uid== useruid){
-                Log.d("tester", user.uid + " " + useruid)
                 removePositin= index
             }
         }

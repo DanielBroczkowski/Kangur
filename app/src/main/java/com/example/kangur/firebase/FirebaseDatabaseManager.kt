@@ -4,11 +4,15 @@ import android.util.Log
 import com.example.kangur.model.ChatMessage
 import com.example.kangur.model.User
 import com.google.firebase.database.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 
 class FirebaseDatabaseManager {
 
     private val firebaseDatabase = FirebaseDatabase.getInstance()
     private var list:ArrayList<User> = ArrayList()
+    var currentUser:User? =null
 
     fun safeUserToFireBaseDataBase(profileImgUrl: String?, uid:String, login:String) {
         val pictureurl:String
@@ -59,7 +63,7 @@ class FirebaseDatabaseManager {
             }
     }
 
-    fun listenforMessages(myUid:String, setMessages:(chatmessage:ChatMessage)-> Unit){
+    fun listenforMessages(myUid:String,interlocutorUID:String, setMessages:(chatmessage:ChatMessage)-> Unit){
         val ref = firebaseDatabase.getReference("/messages")
 
         ref.addChildEventListener(object : ChildEventListener{
@@ -76,13 +80,28 @@ class FirebaseDatabaseManager {
                 val chatMessage = p0.getValue(ChatMessage::class.java)
                 if(chatMessage!=null) {
                     Log.d("MessageActivity", "New message arrived")
-                    if (chatMessage.fromId == myUid) {
+                    if (chatMessage.fromId == myUid && chatMessage.toId==interlocutorUID) {
+                        setMessages(chatMessage)
+                    }
+                    else if(chatMessage.toId==myUid && chatMessage.fromId==interlocutorUID){
                         setMessages(chatMessage)
                     }
                 }
             }
-
             override fun onChildRemoved(p0: DataSnapshot) {
+            }
+        })
+    }
+    fun getCurrentUserInfo(setUser:String, unit:(User) -> Unit){
+        Log.d("test",setUser)
+        val ref = firebaseDatabase.getReference("/users/$setUser")
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val currentUser = p0.getValue(User::class.java)
+                unit(currentUser!!)
             }
 
         })
