@@ -2,6 +2,7 @@ package com.example.kangur.firebase
 
 import android.util.Log
 import com.example.kangur.model.ChatMessage
+import com.example.kangur.model.LatestMessage
 import com.example.kangur.model.User
 import com.google.firebase.database.*
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +14,7 @@ class FirebaseDatabaseManager {
     private val firebaseDatabase = FirebaseDatabase.getInstance()
     private var list:ArrayList<User> = ArrayList()
     var currentUser:User? =null
+    private var hashgMap: HashMap<String,ChatMessage>?=null
 
     fun safeUserToFireBaseDataBase(profileImgUrl: String?, uid:String, login:String) {
         val pictureurl:String
@@ -51,20 +53,9 @@ class FirebaseDatabaseManager {
         })
     }
 
-    fun sendMessage(chatMessage:ChatMessage){
-        val ref = firebaseDatabase.getReference("/messages").push()
-        chatMessage.id= ref.key
-        ref.setValue(chatMessage)
-            .addOnSuccessListener {
-                Log.d("MessageActivity", "Saved message in FireBaseDataBase")
-            }
-            .addOnFailureListener{
-                Log.d("MessageActivity", "Failed to save message in FireBaseDataBase")
-            }
-    }
-
-    fun listenforMessages(myUid:String,interlocutorUID:String, setMessages:(chatmessage:ChatMessage)-> Unit){
-        val ref = firebaseDatabase.getReference("/messages")
+    fun listenforMessages(myUid:String,interlocutorUID:String, setMessages:(chatmessage:ChatMessage)-> Unit) {
+        //val ref = firebaseDatabase.getReference("/messages")
+        val ref = firebaseDatabase.getReference("/user-messages/$myUid/$interlocutorUID/")
 
         ref.addChildEventListener(object : ChildEventListener{
             override fun onCancelled(p0: DatabaseError) {
@@ -79,21 +70,14 @@ class FirebaseDatabaseManager {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val chatMessage = p0.getValue(ChatMessage::class.java)
                 if(chatMessage!=null) {
-                    Log.d("MessageActivity", "New message arrived")
-                    if (chatMessage.fromId == myUid && chatMessage.toId==interlocutorUID) {
-                        setMessages(chatMessage)
-                    }
-                    else if(chatMessage.toId==myUid && chatMessage.fromId==interlocutorUID){
-                        setMessages(chatMessage)
-                    }
+                    setMessages(chatMessage)
                 }
             }
             override fun onChildRemoved(p0: DataSnapshot) {
             }
         })
     }
-    fun getCurrentUserInfo(setUser:String, unit:(User) -> Unit){
-        Log.d("test",setUser)
+    fun getCurrentUserInfo(setUser:String, unit:(User) -> Unit?){
         val ref = firebaseDatabase.getReference("/users/$setUser")
         ref.addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
@@ -104,6 +88,52 @@ class FirebaseDatabaseManager {
                 unit(currentUser!!)
             }
 
+        })
+    }
+
+    fun sendMessage(chatMessage:ChatMessage){
+        val ref = firebaseDatabase.getReference("/user-messages/${chatMessage.fromId}/${chatMessage.toId}").push()
+        val refTo = firebaseDatabase.getReference("/user-messages/${chatMessage.toId}/${chatMessage.fromId}").push()
+        val refLastest = firebaseDatabase.getReference("/latest-message/${chatMessage.toId}/${chatMessage.fromId}")
+        val refLastestTo = firebaseDatabase.getReference("/latest-message/${chatMessage.fromId}/${chatMessage.toId}")
+        chatMessage.id= ref.key
+        ref.setValue(chatMessage)
+            .addOnSuccessListener {
+                Log.d("MessageActivity", "Saved message in FireBaseDataBase")
+            }
+            .addOnFailureListener{
+                Log.d("MessageActivity", "Failed to save message in FireBaseDataBase")
+            }
+        refTo.setValue(chatMessage)
+        refLastest.setValue(chatMessage)
+        refLastestTo.setValue(chatMessage)
+    }
+
+    fun listenForNewMessage(myUid:String, setMessage:(message:HashMap<String,ChatMessage>)-> Unit) {
+        //val ref = firebaseDatabase.getReference("/messages")
+        val ref = firebaseDatabase.getReference("/latest-message/$myUid")
+        val hashMap: HashMap<String,ChatMessage>
+        ref.addChildEventListener(object : ChildEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                val chatMessage = p0.getValue(ChatMessage::class.java)?:return
+                    setMessage([p0.key]= chatMessage)
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val chatMessage = p0.getValue(ChatMessage::class.java)
+                if(chatMessage!=null) {
+                    hashMap[p0.key]= chatMessage
+                    setMessage(hashMap)
+                }
+            }
+            override fun onChildRemoved(p0: DataSnapshot) {
+            }
         })
     }
 }

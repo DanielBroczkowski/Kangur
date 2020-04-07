@@ -32,7 +32,9 @@ class MessageActivity : AppCompatActivity() {
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.stackFromEnd=true
         recyclerView.layoutManager = linearLayoutManager
-        usersCommunicationViewModel.messageList.observe(this, Observer { adapter.onNewMessageCame(it)  })
+        usersCommunicationViewModel.messageList.observe(this, Observer { adapter.onNewMessageCame(it)
+            recyclerView.smoothScrollToPosition(adapter.itemCount)
+        })
 
         enterMessageImageButton.setOnClickListener{
             if(!test_to_send.text.isNullOrEmpty()) {

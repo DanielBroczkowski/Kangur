@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,11 +15,13 @@ import com.example.kangur.model.User
 import com.example.kangur.view.login_register_activity.LoginRegisterActivity
 import com.example.kangur.view.new_message_activity.NewMessageActivity
 import com.example.kangur.viewmodel.SignOutSignInViewModel
+import com.example.kangur.viewmodel.UsersCommunicationViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 class LatestMessagesActivity : AppCompatActivity() {
 
     var signoutViewModel=SignOutSignInViewModel()
+    var usersCommunicationViewModel= UsersCommunicationViewModel()
 
     companion object{
         var currentUser:User?= null
@@ -30,12 +33,15 @@ class LatestMessagesActivity : AppCompatActivity() {
         signoutViewModel.getCurrentUser(::setCurrentUser)
 
         signoutViewModel = ViewModelProviders.of(this).get(SignOutSignInViewModel()::class.java)
+        usersCommunicationViewModel = ViewModelProviders.of(this).get(UsersCommunicationViewModel::class.java)
+
+        usersCommunicationViewModel.listenForLatestMessages()
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_latestmessages)
         val adapter =
-            AdapterLatestMessagesActivity()
+            AdapterLatestMessagesActivity(this)
         recyclerView.adapter=adapter
         recyclerView.layoutManager=LinearLayoutManager(this)
-        Log.d("xd", currentUser?.username.toString())
+        usersCommunicationViewModel.latestMessageList.observe(this, Observer { adapter.addItem(it) })
 
     }
 

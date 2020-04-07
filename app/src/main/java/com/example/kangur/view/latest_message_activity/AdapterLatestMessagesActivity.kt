@@ -1,22 +1,33 @@
 package com.example.kangur.view.latest_message_activity
 
+import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.kangur.R
+import com.example.kangur.model.ChatMessage
+import com.example.kangur.model.LatestMessage
 import com.example.kangur.view.latest_message_activity.AdapterLatestMessagesActivity.*
+import kotlinx.android.synthetic.main.template_user_latest_message.view.*
 
-class AdapterLatestMessagesActivity:RecyclerView.Adapter<ViewHolder>() {
+class AdapterLatestMessagesActivity(val context: Context):RecyclerView.Adapter<ViewHolder>() {
 
-    private var listOfItems = ArrayList<String>()
+    private var listOfItems = ArrayList<LatestMessage>()
 
-    fun refreshList(list: ArrayList<String>){
-        listOfItems=list
+    fun addItem(list: HashMap<String?,ChatMessage>){
+        list.values.forEach{
+            listOfItems.add(LatestMessage(it))
+        }
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
-        //    val deleteButton= view.deleteButton!!
+            val userName= view.textViewUserNameLatestMessages!!
+            val userAvatar= view.imageViewLatestMessage!!
+            val userMessage= view.textViewMessageLatestMessages!!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,5 +40,10 @@ class AdapterLatestMessagesActivity:RecyclerView.Adapter<ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val act = listOfItems[position]
+    //    Glide.with(context).load(Uri.parse(act.chatMessage.)).into
+        holder.userMessage.text=act.chatMessage.text
+
+
     }
 }
