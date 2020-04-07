@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kangur.R
 import com.example.kangur.model.User
 import com.example.kangur.view.login_register_activity.LoginRegisterActivity
+import com.example.kangur.view.message_activity.MessageActivity
 import com.example.kangur.view.new_message_activity.NewMessageActivity
 import com.example.kangur.viewmodel.SignOutSignInViewModel
 import com.example.kangur.viewmodel.UsersCommunicationViewModel
@@ -38,7 +39,7 @@ class LatestMessagesActivity : AppCompatActivity() {
         usersCommunicationViewModel.listenForLatestMessages()
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_latestmessages)
         val adapter =
-            AdapterLatestMessagesActivity(this)
+            AdapterLatestMessagesActivity(this, ::loadMessageActivity)
         recyclerView.adapter=adapter
         recyclerView.layoutManager=LinearLayoutManager(this)
         usersCommunicationViewModel.latestMessageList11.observe(this, Observer { adapter.addItem(it) })
@@ -74,5 +75,10 @@ class LatestMessagesActivity : AppCompatActivity() {
 //        Log.d("pizdaaaaaa", usersCommunicationViewModel.getInterlocutorData(interUID).username)
 //        return usersCommunicationViewModel.getInterlocutorData(interUID)
 //    }
+private fun loadMessageActivity(toUser: User){
+    val intent = Intent(this, MessageActivity::class.java)
+    intent.putExtra("user", toUser)
+    startActivity(intent)
+}
 }
 

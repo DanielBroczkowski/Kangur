@@ -45,5 +45,6 @@ class MessageActivity : AppCompatActivity() {
                 recyclerView.smoothScrollToPosition(adapter.itemCount)
             }
         }
+
     }
 }

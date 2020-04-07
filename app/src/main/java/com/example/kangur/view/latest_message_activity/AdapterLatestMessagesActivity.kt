@@ -14,7 +14,7 @@ import com.example.kangur.model.User
 import com.example.kangur.view.latest_message_activity.AdapterLatestMessagesActivity.*
 import kotlinx.android.synthetic.main.template_user_latest_message.view.*
 
-class AdapterLatestMessagesActivity(val context: Context):RecyclerView.Adapter<ViewHolder>() {
+class AdapterLatestMessagesActivity(val context: Context, private val toMessageActivity:(user:User) -> Unit):RecyclerView.Adapter<ViewHolder>() {
 
     private var listOfItems = ArrayList<LatestMessage>()
 
@@ -49,6 +49,9 @@ class AdapterLatestMessagesActivity(val context: Context):RecyclerView.Adapter<V
         holder.userMessage.text=act.chatMessage.text
         holder.userName.text= act.user!!.username
 
+        holder.itemView.setOnClickListener {
+            toMessageActivity(act.user!!)
+        }
 
     }
 }
