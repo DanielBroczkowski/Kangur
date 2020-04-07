@@ -26,7 +26,7 @@ class SignOutSignInViewModel:ViewModel() {
     fun setmanagedToLogIn(onComplete:Boolean){
         managedToLogIn.postValue(onComplete)
     }
-    fun getCurrentUser(setUser:(user: User) ->Unit) {
+    fun getCurrentUser(setUser:(user: User) ->Unit){
         val currentUserUID = firebaseAuthManager.getUID()
         firebaseDataBaseManager.getCurrentUserInfo(currentUserUID, setUser)
     }

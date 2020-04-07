@@ -41,7 +41,7 @@ class LatestMessagesActivity : AppCompatActivity() {
             AdapterLatestMessagesActivity(this)
         recyclerView.adapter=adapter
         recyclerView.layoutManager=LinearLayoutManager(this)
-        usersCommunicationViewModel.latestMessageList.observe(this, Observer { adapter.addItem(it) })
+        usersCommunicationViewModel.latestMessageList11.observe(this, Observer { adapter.addItem(it) })
 
     }
 
@@ -66,8 +66,13 @@ class LatestMessagesActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun setCurrentUser(user:User){
+    private fun setCurrentUser(user:User){
         currentUser=user
     }
+
+//    private fun getInterlocutorData(interUID:String): User{
+//        Log.d("pizdaaaaaa", usersCommunicationViewModel.getInterlocutorData(interUID).username)
+//        return usersCommunicationViewModel.getInterlocutorData(interUID)
+//    }
 }
 

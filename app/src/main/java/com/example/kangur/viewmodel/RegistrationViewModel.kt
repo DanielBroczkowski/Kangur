@@ -26,7 +26,7 @@ class RegistrationViewModel : ViewModel() {
             val userUIDset :(String?)-> Unit= { uid->
                 if(uid!=null) { // jestli nie jest nullem tzn ze udalo nam sie zarejstrowac wiec omijamy vala avatarImgUrl i...
                     val avatarImgUrl: (String?) -> Unit = { url -> //dodajemy usera do bazy danych z danymi ktore otrzymalismy
-                        firebaseDatabaseManager.safeUserToFireBaseDataBase(url, uid, login)
+                        firebaseDatabaseManager.safeUserToFireBaseDataBase(url, uid, login, ::userIsAdded)
                     }
 
                     if (selectedPhoto != null) { //jesli wybralismy zdjecie to uploadujemy je i przesylamy vala avatarImgUrl ktory nam zwroci url do naszego zdjecia
@@ -35,10 +35,10 @@ class RegistrationViewModel : ViewModel() {
                     else {
                         avatarImgUrl(selectedPhoto) //jak nie wybralismy zdjecia (czyli null) to omijamy storage i od razu dodajemy usera do bazy danych
                     }
-                    isRegistered.postValue(true) //ogolnie udalo sie zarejestrowac (uuid nie jest nullem wiec dajemy do obserwowanego true)
+              //      isRegistered.postValue(true) //ogolnie udalo sie zarejestrowac (uuid nie jest nullem wiec dajemy do obserwowanego true)
                 }
                 else{
-                    isRegistered.postValue(false) //ogolnie nie udalo sie zarejestrowac (uuid nie jest nullem wiec dajemy do obserwowanego false)
+                    isRegistered.value=false //ogolnie nie udalo sie zarejestrowac (uuid nie jest nullem wiec dajemy do obserwowanego false)
                 }
             }
 
@@ -46,4 +46,7 @@ class RegistrationViewModel : ViewModel() {
             //musimy cos dostac bo inaczej nie wywolamy vala userUIDset
         }
 
+    private fun userIsAdded(bool:Boolean){
+        isRegistered.value=bool
+    }
 }

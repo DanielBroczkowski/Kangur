@@ -16,7 +16,7 @@ class FirebaseDatabaseManager {
     var currentUser:User? =null
     private var hashgMap: HashMap<String,ChatMessage>?=null
 
-    fun safeUserToFireBaseDataBase(profileImgUrl: String?, uid:String, login:String) {
+    fun safeUserToFireBaseDataBase(profileImgUrl: String?, uid:String, login:String, onSuccess:(bool:Boolean)->Unit) {
         val pictureurl:String
         if(profileImgUrl.isNullOrEmpty()){
             pictureurl="https://firebasestorage.googleapis.com/v0/b/kangur-55197.appspot.com/o/images%2F69d0410c-f2db-41ad-b917-e27f1675f747?alt=media&token=2bc9e42b-f338-4bd3-af5e-90bf2b9b161e"
@@ -29,10 +29,12 @@ class FirebaseDatabaseManager {
         ref.setValue(user) //no i dodajemy te value
             .addOnSuccessListener {
                 Log.d("RegisterFragment", "Successfully saved user to firebase database")
+                onSuccess(true)
                 return@addOnSuccessListener
             }
             .addOnFailureListener {
                 Log.d("RegisterFragment", "Failed to save user to firebase database")
+                onSuccess(false)
                 return@addOnFailureListener
             }
     }
@@ -77,7 +79,7 @@ class FirebaseDatabaseManager {
             }
         })
     }
-    fun getCurrentUserInfo(setUser:String, unit:(User) -> Unit?){
+    fun getCurrentUserInfo(setUser:String, setUserData:(user:User) -> Unit?) {
         val ref = firebaseDatabase.getReference("/users/$setUser")
         ref.addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
@@ -85,7 +87,7 @@ class FirebaseDatabaseManager {
 
             override fun onDataChange(p0: DataSnapshot) {
                 val currentUser = p0.getValue(User::class.java)
-                unit(currentUser!!)
+                setUserData(currentUser!!)
             }
 
         })
@@ -122,18 +124,33 @@ class FirebaseDatabaseManager {
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
                 val chatMessage = p0.getValue(ChatMessage::class.java)?:return
-                    setMessage([p0.key]= chatMessage)
+                val hassh:HashMap<String, ChatMessage> =HashMap()
+                hassh[p0.key!!]=chatMessage
+                    setMessage(hassh)
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                val chatMessage = p0.getValue(ChatMessage::class.java)
-                if(chatMessage!=null) {
-                    hashMap[p0.key]= chatMessage
-                    setMessage(hashMap)
-                }
+                val chatMessage = p0.getValue(ChatMessage::class.java)?:return
+                val hassh:HashMap<String, ChatMessage> =HashMap()
+                hassh[p0.key!!]=chatMessage
+                setMessage(hassh)
             }
             override fun onChildRemoved(p0: DataSnapshot) {
             }
+        })
+    }
+
+    fun getInhercostamData(setUser: String , unit:(user:User)->Unit) {
+        val ref = firebaseDatabase.getReference("/users/$setUser")
+        ref.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val currentUser = p0.getValue(User::class.java)
+                unit(currentUser!!)
+            }
+
         })
     }
 }
