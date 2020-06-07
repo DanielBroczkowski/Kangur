@@ -58,7 +58,6 @@ class FirebaseDatabaseManager {
     fun listenforMessages(myUid:String,interlocutorUID:String, setMessages:(chatmessage:ChatMessage)-> Unit) {
         //val ref = firebaseDatabase.getReference("/messages")
         val ref = firebaseDatabase.getReference("/user-messages/$myUid/$interlocutorUID/")
-
         ref.addChildEventListener(object : ChildEventListener{
             override fun onCancelled(p0: DatabaseError) {
             }

@@ -30,6 +30,7 @@ class MessageActivity : AppCompatActivity() {
 
         usersCommunicationViewModel.listenForMessages(interlocutor.uid)
 
+
         val adapter = MessageAdapter(this, interlocutor, LatestMessagesActivity.currentUser!!)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_message)
         recyclerView.adapter=adapter
@@ -56,6 +57,11 @@ class MessageActivity : AppCompatActivity() {
 
             scanner.initiateScan()
         }
+    }
+
+    override fun onDestroy() {
+
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
