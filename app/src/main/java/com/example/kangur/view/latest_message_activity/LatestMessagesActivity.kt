@@ -18,6 +18,7 @@ import com.example.kangur.view.new_message_activity.NewMessageActivity
 import com.example.kangur.viewmodel.SignOutSignInViewModel
 import com.example.kangur.viewmodel.UsersCommunicationViewModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Job
 
 class LatestMessagesActivity : AppCompatActivity() {
 
@@ -36,12 +37,14 @@ class LatestMessagesActivity : AppCompatActivity() {
         signoutViewModel = ViewModelProviders.of(this).get(SignOutSignInViewModel()::class.java)
         usersCommunicationViewModel = ViewModelProviders.of(this).get(UsersCommunicationViewModel::class.java)
 
-        usersCommunicationViewModel.listenForLatestMessages()
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView_latestmessages)
         val adapter =
             AdapterLatestMessagesActivity(this, ::loadMessageActivity)
         recyclerView.adapter=adapter
         recyclerView.layoutManager=LinearLayoutManager(this)
+
+        usersCommunicationViewModel.listenForLatestMessages()
+
         usersCommunicationViewModel.latestMessageList11.observe(this, Observer { adapter.addItem(it) })
 
     }
@@ -50,6 +53,7 @@ class LatestMessagesActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.nav_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
