@@ -17,8 +17,11 @@ import com.example.kangur.view.latest_message_activity.LatestMessagesActivity
 import com.example.kangur.viewmodel.UsersCommunicationViewModel
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.activity_message.*
+import kotlinx.coroutines.Job
 
 class MessageActivity : AppCompatActivity() {
+
+    lateinit var test : Job
 
     private var usersCommunicationViewModel= UsersCommunicationViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +30,7 @@ class MessageActivity : AppCompatActivity() {
         title=interlocutor.getlogin()
         setContentView(R.layout.activity_message)
         usersCommunicationViewModel = ViewModelProviders.of(this).get(UsersCommunicationViewModel::class.java)
-
-        usersCommunicationViewModel.listenForMessages(interlocutor.uid)
+        test = usersCommunicationViewModel.listenForMessages(interlocutor.uid)
 
 
         val adapter = MessageAdapter(this, interlocutor, LatestMessagesActivity.currentUser!!)
@@ -59,9 +61,9 @@ class MessageActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-
-        super.onDestroy()
+    override fun onPause() {
+        test.cancel()
+        super.onPause()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
